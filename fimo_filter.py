@@ -42,8 +42,8 @@ if __name__ == "__main__":
 
     with mp.Pool() as pool:
         filtered: pd.DataFrame = pd.concat(
-            pool.starmap(remove_duplicate, fimo.groupby(["strand", "#pattern name", "sequence name"]), chunksize=1000))
+            pool.starmap(remove_duplicate, fimo.groupby(["strand", "#pattern name", "sequence name"]), chunksize=100))
 
-        filtered.sort_index(inplace=True)
+    filtered.sort_index(inplace=True)
 
-        filtered.to_pickle(args.output)
+    filtered.to_pickle(args.output)
