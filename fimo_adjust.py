@@ -7,25 +7,13 @@ from typing import Union
 import pandas as pd
 
 from extract_coordinates import cut_promoter, non_negative_num, promoter_file
+from utils import read_fimo
 
 
 def gzip_pickle(obj, name: Union[str, Path]):
     with open(name, 'wb') as f:
         with gzip.open(f, 'wb') as g:
             pickle.dump(obj, g, protocol=pickle.HIGHEST_PROTOCOL)
-
-
-def read_fimo(fimo_path: Union[str, Path]) -> pd.DataFrame:
-    with open(fimo_path, 'rb') as f:
-        magic = f.read(2)
-        f.seek(0)
-        if magic == b'\x1f\x8b':
-            with gzip.open(f, 'rb') as g:
-                return pickle.load(g)
-        else:
-            return pd.read_csv(f, sep="\t", header=0,
-                               usecols=['#pattern name', 'sequence name', 'start', 'stop', 'strand', 'score',
-                                        'p-value'], engine='c')
 
 
 def fimo_coord_translate(fimo_path: Union[str, Path], promoter_path: Union[str, Path],

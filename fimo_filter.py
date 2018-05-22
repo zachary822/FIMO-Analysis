@@ -4,7 +4,7 @@ from typing import Tuple
 import numpy as np
 import pandas as pd
 
-from fimo_adjust import read_fimo
+from utils import read_fimo
 
 
 def remove_duplicate(name: Tuple[str], group: pd.DataFrame) -> pd.DataFrame:
