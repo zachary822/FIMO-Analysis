@@ -1,5 +1,5 @@
 import multiprocessing as mp
-from typing import Tuple
+from typing import Tuple, Generator
 
 import numpy as np
 import pandas as pd
@@ -9,17 +9,18 @@ from utils import read_fimo
 
 def remove_duplicate(name: Tuple[str], group: pd.DataFrame) -> pd.DataFrame:
     group = group.sort_values(["p-value", "start", "stop"])
-    total = []
 
-    while not group.empty:
-        p_min = group.iloc[0]
-        total.append(p_min)
-        group = group.iloc[1:]
-        selector: pd.Series = (group.start <= p_min.stop) & (group.stop >= p_min.start)
-        if selector.any():
-            group = group[~selector]
+    def get_min_unique() -> Generator[pd.Series, None, None]:
+        nonlocal group
+        while not group.empty:
+            p_min = group.iloc[0]
+            yield p_min
+            group = group.iloc[1:]
+            selector: pd.Series = (group.start <= p_min.stop) & (group.stop >= p_min.start)
+            if selector.any():
+                group = group[~selector]
 
-    total = pd.concat(total, axis=1).T
+    total = pd.concat(get_min_unique(), axis=1).T
     total[['#pattern name', 'sequence name', 'strand']] = total[['#pattern name', 'sequence name', 'strand']].astype(
         str)
     total[['start', 'stop']] = total[['start', 'stop']].astype(np.int64)
