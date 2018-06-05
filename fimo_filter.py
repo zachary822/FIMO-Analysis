@@ -1,5 +1,6 @@
+import csv
 import multiprocessing as mp
-from typing import Tuple, Generator
+from typing import Generator, Tuple
 
 import numpy as np
 import pandas as pd
@@ -34,6 +35,7 @@ if __name__ == "__main__":
     from pathlib import Path
 
     parser = argparse.ArgumentParser(description="filter FIMO output for overlapping matches")
+    parser.add_argument('-p', '--pickle', help='output pickle file', action='store_true')
     parser.add_argument('fimo', type=Path, help='FIMO file or data frame.')
     parser.add_argument('output', type=Path, help='output file')
 
@@ -47,4 +49,7 @@ if __name__ == "__main__":
 
     filtered.sort_index(inplace=True)
 
-    filtered.to_pickle(args.output)
+    if args.pickle:
+        filtered.to_pickle(args.output)
+    else:
+        filtered.to_csv(args.output, sep='\t', index=False, quoting=csv.QUOTE_NONE)
