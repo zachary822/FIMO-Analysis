@@ -16,7 +16,7 @@ def remove_duplicate(name: Tuple[str], group: pd.DataFrame) -> pd.DataFrame:
         while not group.empty:
             p_min = group.iloc[0]
             yield p_min
-            group = group.iloc[1:]
+            group = group.iloc[1:, :]
             selector: pd.Series = (group.start <= p_min.stop) & (group.stop >= p_min.start)
             if selector.any():
                 group = group[~selector]
