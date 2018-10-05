@@ -23,7 +23,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("gene_annotation", type=str, help="gff3 file of gene annotations")
     parser.add_argument("filtered_matches", type=str, help="FIMO matches that are filtered for duplicated matches")
-    parser.add_argument("--output", type=str, default="annotated.pickle.gz")
+    parser.add_argument("-o", "--output", type=str, default="annotated.pickle.gz")
 
     args = parser.parse_args()
 
@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     gff = pd.read_csv(
         args.gene_annotation,
-        sep="\t", header=None, engine='c', comment='#')
+        sep="\t", header=None, engine='c', comment='#', dtype={0: str})
 
     genes = gff[gff[2] == "gene"].copy(False)
 
