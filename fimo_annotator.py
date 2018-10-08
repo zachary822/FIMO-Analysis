@@ -4,6 +4,7 @@ Associate filtered FIMO pickle with gene annotations
 Removes matches that are not part of gene or promoter region.
 """
 import re
+from functools import partial
 
 import pandas as pd
 
@@ -24,6 +25,8 @@ if __name__ == "__main__":
     parser.add_argument("gene_annotation", type=str, help="gff3 file of gene annotations")
     parser.add_argument("filtered_matches", type=str, help="FIMO matches that are filtered for duplicated matches")
     parser.add_argument("-o", "--output", type=str, default="annotated.pickle.gz")
+    parser.add_argument("-u", "--upstream-length", type=int, default=1000,
+                        help="define promoter region (default: 1000bp upstream)")
 
     args = parser.parse_args()
 
@@ -38,7 +41,7 @@ if __name__ == "__main__":
 
     genes[8] = genes[8].str.extract(r"id=(.+?);", re.I, expand=True)
     genes[9] = genes.groupby([6, 0], as_index=False).apply(
-        get_upstream_loc).reset_index(level=0, drop=True).sort_index()
+        partial(get_upstream_loc, length=args.upstream_length)).reset_index(level=0, drop=True).sort_index()
     genes.reset_index(drop=True, inplace=True)
     genes.drop([1, 2, 5, 7], axis=1, inplace=True)
 
