@@ -67,7 +67,6 @@ if __name__ == "__main__":
     annotated.reset_index(inplace=True)
     annotated.rename(columns={'index': 'match_id'}, inplace=True)
     annotated.sort_values(['gene', 'match_id'], inplace=True)
-    annotated['gene'] = annotated['gene'].astype('category')
     annotated.set_index('gene', inplace=True)
 
     annotated.to_pickle(args.output, compression='gzip')
