@@ -9,8 +9,8 @@ from statsmodels.stats.multitest import fdrcorrection
 
 def promoter_size(s):
     value = int(s)
-    if value > 1000:
-        raise argparse.ArgumentTypeError("Promoter size has to be less than or equal to 1000.")
+    if value > 2000:
+        raise argparse.ArgumentTypeError("Promoter size has to be less than or equal to 2000.")
 
     return value
 
